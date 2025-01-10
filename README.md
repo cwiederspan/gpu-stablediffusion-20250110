@@ -17,7 +17,7 @@ az deployment group create \
   --resource-group $RG_NAME \
   --template-file ./infra/container-app/main.bicep
 
-  az deployment group delete \
+az deployment group delete \
   --name $DEPLOYMENT_NAME \
   --resource-group $RG_NAME
 
