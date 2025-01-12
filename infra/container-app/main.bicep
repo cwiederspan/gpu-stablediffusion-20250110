@@ -1,5 +1,5 @@
 param location string = resourceGroup().location
-param baseName string = 'cdw-gpuapp-20250110'
+param baseName string
 param workloadProfileName string = 'gpu-serverless'
 
 param userManagedIdentity string
