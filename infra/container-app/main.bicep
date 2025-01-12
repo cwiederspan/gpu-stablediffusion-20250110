@@ -1,7 +1,11 @@
 param location string = resourceGroup().location
 param baseName string = 'cdw-gpuapp-20250110'
-param containerImageUrl string = 'mcr.microsoft.com/k8se/gpu-quickstart:latest'
 param workloadProfileName string = 'gpu-serverless'
+
+param userManagedIdentity string
+param containerRegistry string
+param containerImagePath string
+param targetPort int = 80
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' = {
   name: '${baseName}-law'
@@ -40,8 +44,8 @@ resource containerAppEnv 'Microsoft.App/managedEnvironments@2024-10-02-preview' 
       {
         name: workloadProfileName
         workloadProfileType: 'Consumption-GPU-NC8as-T4'
-        // minimumCount: 0
-        // maximumCount: 1
+        // minimumCount: 0      // Causes error
+        // maximumCount: 1      // Causes error
       }
     ]
   }
@@ -50,20 +54,33 @@ resource containerAppEnv 'Microsoft.App/managedEnvironments@2024-10-02-preview' 
 resource containerApp 'Microsoft.App/containerApps@2024-10-02-preview' = {
   name: '${baseName}-aca'
   location: location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${userManagedIdentity}': {}
+    }
+  }
   properties: {
     workloadProfileName: workloadProfileName
     managedEnvironmentId: containerAppEnv.id
     configuration: {
       ingress: {
         external: true
-        targetPort: 80
+        targetPort: targetPort
       }
+      registries: [
+        {
+          server: containerRegistry
+          identity: userManagedIdentity
+        }
+      ]
     }
     template: {
       containers: [
         {
           name: 'gpu-hello-world-container'
-          image: containerImageUrl
+          imageType: 'ContainerImage'
+          image: '${containerRegistry}${containerImagePath}'
           command: []
           args: []
           resources: {
