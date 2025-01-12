@@ -6,7 +6,7 @@ An example of using Stable Diffusion in a containerized application that can be 
 
 az login -t 50b50181-4f19-4fb9-b127-6428540c3569
 
-RG_NAME=cdw-gpuapp-20250110
+RG_NAME=cdw-gpuapp-20250111
 LOCATION=westus3
 DEPLOYMENT_NAME=deploy-aca-app
 MANAGED_USER_ID=/subscriptions/99687110-f266-471f-9345-b1a19c6b6b7f/resourceGroups/rds-shared/providers/Microsoft.ManagedIdentity/userAssignedIdentities/reachdigital-acr-pull-user
