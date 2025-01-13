@@ -39,4 +39,7 @@ az deployment group delete \
 
 az group delete -n $BASE_NAME
 
+
+az acr import -n reachdigital --source mcr.microsoft.com/k8se/gpu-quickstart:latest --image k8se/gpu-quickstart:latest
+
 ```
